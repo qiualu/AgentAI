@@ -9,7 +9,7 @@ import serpent.game
 # classes = inspect.getmembers(sys.modules[m], inspect.isclass)
 # print("classes", classes)
 
-
+import ast
 import importlib
 from serpent.Editlibrary.yl_offshoot.plugin import Plugin
 
@@ -53,12 +53,123 @@ def python_xg():
     print(install_messages)
 
 
+
+from serpent.utilities import SerpentError, Singleton
+
+import ast
+from serpent.Editlibrary.yl_offshoot.base import discover
+
+from serpent.input_controller import InputController, InputControllers
+
+from serpent.config import config
+from redis import StrictRedis
+class Pluggable:
+
+    def __init__(self, **kwargs):
+        pass
+
+# class Game(offshoot.Pluggable):
+class Game(Pluggable):
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.config = config.get(f"{self.__class__.__name__}Plugin", dict())
+
+        self.platform = kwargs.get("platform")
+
+        default_input_controller_backend = InputControllers.CLIENT
+        self.input_controller = kwargs.get("input_controller") or default_input_controller_backend
+
+        self.window_name = kwargs.get("window_name")
+
+
+        self.redis_client = StrictRedis(**config["redis"])
+
+
+        self.kwargs = kwargs
+
+
+class SerpentMLAGame(Game, metaclass=Singleton):
+
+    def __init__(self, **kwargs):
+        kwargs["platform"] = "executable"
+
+        kwargs["window_name"] = "WINDOW_NAME44444444444444"
+
+        kwargs["executable_path"] = "EXECUTABLE_PATH5555555555"
+
+# 运行游戏
+def pluginDebug():
+    file_path = r"plugins\SerpentMLAGamePlugin\files\serpent_MLA_game.py"
+    game_name = "MLA"
+
+    game_class_name = f"Serpent{game_name}Game"
+
+    # print("game_class_mapping : ",game_class_mapping)
+
+    Runm = 2
+
+    if Runm == 1:
+        # 导入信息:
+        # from plugins.SerpentMLAGamePlugin.files.serpent_MLA_game import SerpentMLAGame
+        # 导入信息:
+        # from plugins.SerpentDNFGamePlugin.files.serpent_DNF_game import SerpentDNFGame
+
+        import_statement = "from plugins.SerpentMLAGamePlugin.files.serpent_MLA_game import SerpentMLAGame"
+        exec(import_statement)
+        g = eval("SerpentMLAGame")
+        print("g : ", g, type(g))
+        # g :  <class 'plugins.SerpentMLAGamePlugin.files.serpent_MLA_game.SerpentMLAGame'> <class 'serpent.utilities.Singleton'>
+
+        print(g.help())
+        gs = g()
+        print("gs : ", gs, type(gs))
+        # gs :  <plugins.SerpentMLAGamePlugin.files.serpent_MLA_game.SerpentMLAGame object at 0x0000016246244850> <class 'plugins.SerpentMLAGamePlugin.files.serpent_MLA_game.SerpentMLAGame'>
+
+
+        from plugins.SerpentMLAGamePlugin.files.serpent_MLA_game import SerpentMLAGame as dsds
+
+        h = dsds()
+        hs = dsds()
+        print("h",h,type(h))
+        # h     <plugins.SerpentMLAGamePlugin.files.serpent_MLA_game.SerpentMLAGame object at 0x00000234E716C2E0> <class 'plugins.SerpentMLAGamePlugin.files.serpent_MLA_game.SerpentMLAGame'>
+        if g == h:
+            print("两个类等同")
+        else:
+            print("两类不等同", type(g), type(h))
+        return
+    elif Runm == 2:
+        game_class_mapping = discover("Game")
+        game_class = game_class_mapping.get(game_class_name)
+
+        if game_class is None:
+            raise Exception(f"Game '{game_name}' wasn't found. Make sure the plugin is installed.")
+
+        game = game_class()
+
+        game.launch()
+
+        print(" ------------- ")
+        print(game.window_name)
+        print(game.redis_client)
+        print(game.platform)
+
+        return
+
+
+
+
+
+
 if __name__ == '__main__':
     # print("he,",sys.modules[m])
     # inspect.getmembers(sys.modules[m], inspect.isclass)
-    print("HHH")
+    print(" --- Debug 测试模块 --- ")
     # PluginTest()
 
     # activateplugin("SerpentMLAGamePlugin")
 
-    python_xg()
+    # python_xg()
+    pluginDebug()
+
+

@@ -50,9 +50,9 @@ def map_pluggable_classes(config):
     pluggable_classes = dict()
 
     for m in config.get("modules"):
-        print("m",m)
-        exec("import %s" % m)
-        return
+        # print("m",m)
+        # exec("import %s" % m)
+        # return
         try:
             exec("import %s" % m)
             classes = inspect.getmembers(sys.modules[m], inspect.isclass)
@@ -127,10 +127,16 @@ def discover(pluggable, scope=None, selection=None):
     valid_class_names = list()
     import_statements = list()
 
+    print("插件名字 : ",plugin_file_paths,pluggable)
+
     for plugin_file_path, pluggable in plugin_file_paths:
         plugin_module = plugin_file_path.replace(os.sep, ".").replace(".py", "")
 
         valid, plugin_class = file_contains_pluggable(plugin_file_path, pluggable)
+        # print("plugin_module", plugin_module)
+        # print("valid, plugin_class : ", valid, plugin_class)
+        # valid, plugin_class = True SerpentMLAGame
+
 
         if valid:
             if selection:
@@ -142,8 +148,12 @@ def discover(pluggable, scope=None, selection=None):
             
             valid_class_names.append(plugin_class)
             import_statements.append("from %s import %s" % (plugin_module, plugin_class))
+    # 插件信息 和 路径
+    # print("valid_class_names : ", valid_class_names)
+    # print("import_statements : ", import_statements)
 
     for import_statement in import_statements:
+        print("导入信息 : " , import_statement)
         if scope is not None:
             exec(import_statement, scope)
         else:
@@ -163,8 +173,11 @@ def discover(pluggable, scope=None, selection=None):
 def file_contains_pluggable(file_path, pluggable):
     plugin_class = None
 
+    # print("file_path : ",file_path)
+    # file_path plugins\SerpentMLAGamePlugin\files\serpent_MLA_game.py
+
     try:
-        with open(file_path, "r") as f:
+        with open(file_path, "r" , encoding='utf-8') as f:
             syntax_tree = ast.parse(f.read())
     except FileNotFoundError:
         return [False, None]

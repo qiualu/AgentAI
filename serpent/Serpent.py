@@ -17,11 +17,14 @@ sys.path.append(parent_directory)
 
 
 
-import offshoot
 
 from serpent.utilities import clear_terminal, display_serpent_logo, is_linux, is_windows, wait_for_crossbar
 
 from serpent.window_controller import WindowController
+
+import offshoot
+# 代替 offshoot
+from serpent.Editlibrary.yl_offshoot.base import discover
 
 # Add the current working directory to sys.path to discover user plugins!
 sys.path.insert(0, os.getcwd())
@@ -406,9 +409,14 @@ def plugins():
     print("\nINACTIVE Plugins:\n")
     print("\n".join(inactive_plugins or ["No inactive plugins..."]))
 
-
+# 启动游戏
 def launch(game_name):
+    print("启动游戏",game_name)
     game = initialize_game(game_name)
+    # 等同
+    # from plugins.SerpentMLAGamePlugin.files.serpent_MLA_game import SerpentMLAGame
+    # game = SerpentMLAGame()
+
     game.launch()
 
 
@@ -702,14 +710,17 @@ def train_object(name, algorithm, *classes):
 def initialize_game(game_name):
     game_class_name = f"Serpent{game_name}Game"
 
-    game_class_mapping = offshoot.discover("Game")
+    # game_class_mapping = offshoot.discover("Game")
+    game_class_mapping = discover("Game")
     game_class = game_class_mapping.get(game_class_name)
 
     if game_class is None:
         raise Exception(f"Game '{game_name}' wasn't found. Make sure the plugin is installed.")
 
     game = game_class()
-
+    # 等同
+    # from plugins.SerpentMLAGamePlugin.files.serpent_MLA_game import SerpentMLAGame
+    # game = SerpentMLAGame()
     return game
 
 

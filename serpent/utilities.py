@@ -90,3 +90,6 @@ class Singleton(type):
         if cls not in cls._instances:
             cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
         return cls._instances[cls]
+
+    # def help(cls):
+    #     print("utilities 定义类")

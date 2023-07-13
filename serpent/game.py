@@ -35,11 +35,13 @@ from redis import StrictRedis
 from serpent.config import config
 
 
+from serpent.Editlibrary.yl_offshoot.pluggable import Pluggable
+
 class GameError(BaseException):
     pass
 
-
-class Game(offshoot.Pluggable):
+# class Game(offshoot.Pluggable):
+class Game(Pluggable):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -121,6 +123,9 @@ class Game(offshoot.Pluggable):
 
     @offshoot.forbidden
     def launch(self, dry_run=False):
+
+        print(" 游戏开始运行000 ")
+        return
         self.before_launch()
 
         if not dry_run:

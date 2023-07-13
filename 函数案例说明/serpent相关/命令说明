@@ -44,6 +44,12 @@ u: python Serpent.py generate game_agent
 u: game_name = MLA
     cmd : python Serpent.py activate SerpentMLAGameAgentPlugin
 
+
+
+# 启动游戏
+u : python Serpent.py  launch  MLA
+
+
 # 启动游戏
 运行 serpent launch SuperHexagon
 

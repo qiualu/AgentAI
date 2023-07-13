@@ -1,3 +1,5 @@
+SerpentDNFGameAgentPlugin:
+  frame_handler: PLAY
 SerpentDNFGamePlugin:
   fps: 2
 SerpentMLAGameAgentPlugin:
