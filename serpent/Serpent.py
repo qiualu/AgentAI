@@ -369,12 +369,12 @@ def activate(plugin_name):
     print("激活一个插件",plugin_name)
     # subprocess.call(shlex.split(f"offshoot install {plugin_name}"))
 
-
     plugin_module = importlib.import_module('serpent.plugins.%s.plugin' % plugin_name)
     # 获取 plugin_main 函数
     plugin_main = getattr(plugin_module, 'plugin_main')
     # 调用 plugin_main 函数
     plugin_main("install") # 安装插件
+
 
 
 
@@ -565,8 +565,8 @@ def generate_game_agent_plugin():
         raise Exception("Invalid game agent name.")
 
     prepare_game_agent_plugin(game_agent_name)
-
-    subprocess.call(shlex.split(f"serpent activate Serpent{game_agent_name}GameAgentPlugin"))
+    subprocess.call(shlex.split(f"python Serpent.py activate Serpent{game_agent_name}GameAgentPlugin"))
+    # subprocess.call(shlex.split(f"serpent activate Serpent{game_agent_name}GameAgentPlugin"))
 
 # 复制  游戏插件 并修改成创建的游戏名相关的插件
 def prepare_game_plugin(game_name, game_platform):
@@ -636,32 +636,33 @@ def prepare_game_plugin(game_name, game_platform):
     with open(f"{plugin_destination_path}/files/api/api.py".replace("/", os.sep), "w", encoding='utf-8') as f:
         f.write(contents)
 
-
+# 复制代理应用文件
 def prepare_game_agent_plugin(game_agent_name):
     plugin_destination_path = f"{offshoot.config['file_paths']['plugins']}/Serpent{game_agent_name}GameAgentPlugin".replace("/", os.sep)
+    # print("plugin_destination_path",plugin_destination_path)
 
     shutil.copytree(
         os.path.join(os.path.dirname(__file__), "templates/SerpentGameAgentPlugin".replace("/", os.sep)),
         plugin_destination_path
     )
 
-    with open(f"{plugin_destination_path}/plugin.py", "r") as f:
+    with open(f"{plugin_destination_path}/plugin.py", "r", encoding='utf-8') as f:
         contents = f.read()
 
     contents = contents.replace("SerpentGameAgentPlugin", f"Serpent{game_agent_name}GameAgentPlugin")
     contents = contents.replace("serpent_game_agent.py", f"serpent_{game_agent_name}_game_agent.py")
 
-    with open(f"{plugin_destination_path}/plugin.py", "w") as f:
+    with open(f"{plugin_destination_path}/plugin.py", "w", encoding='utf-8') as f:
         f.write(contents)
 
     shutil.move(f"{plugin_destination_path}/files/serpent_game_agent.py", f"{plugin_destination_path}/files/serpent_{game_agent_name}_game_agent.py")
 
-    with open(f"{plugin_destination_path}/files/serpent_{game_agent_name}_game_agent.py", "r") as f:
+    with open(f"{plugin_destination_path}/files/serpent_{game_agent_name}_game_agent.py", "r", encoding='utf-8') as f:
         contents = f.read()
 
     contents = contents.replace("SerpentGameAgent", f"Serpent{game_agent_name}GameAgent")
 
-    with open(f"{plugin_destination_path}/files/serpent_{game_agent_name}_game_agent.py", "w") as f:
+    with open(f"{plugin_destination_path}/files/serpent_{game_agent_name}_game_agent.py", "w", encoding='utf-8') as f:
         f.write(contents)
 
 

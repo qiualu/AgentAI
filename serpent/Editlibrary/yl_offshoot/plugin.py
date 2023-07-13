@@ -35,8 +35,9 @@ class Plugin:
             cls.verify_plugin_dependencies()
         if offshoot.config["allow"]["files"] is True:
             cls.install_files()
-            return
+            # return
         if offshoot.config["allow"]["config"] is True:
+            print("config 开始安装配置文件")
             cls.install_configuration()
         if offshoot.config["allow"]["libraries"] is True:
             cls.install_libraries()
@@ -69,7 +70,7 @@ class Plugin:
         # manifest = offshoot.Manifest()
         manifest = Manifest()
         missing_plugin_names = list()
-
+        print("cls.plugins",cls.plugins)
         for plugin_name in cls.plugins:
             if not manifest.contains_plugin(plugin_name):
                 missing_plugin_names.append(plugin_name)
@@ -87,26 +88,30 @@ class Plugin:
         installed_files = list()
         pluggable_classes = offshoot.pluggable_classes()
 
-        # print(pluggable_classes)
+        print(pluggable_classes)
 
-        print("cls.files : ", cls.files)
-        a = True
-        if a:
-            return
+
+
+        # a = True
+        # if a:
+        #     return
 
         try:
             for file_dict in cls.files:
                 plugin_file_path = "%s/%s/files/%s".replace("/", os.sep) % (offshoot.config["file_paths"]["plugins"], cls.name, file_dict["path"])
-
-                print("文件路径: ",plugin_file_path)
+                print("文件路径: ", plugin_file_path)
+                print("file_dict: ",file_dict)
                 # Pluggable Validation
                 if "pluggable" in file_dict:
-                    is_valid, messages = cls._validate_file_for_pluggable(plugin_file_path, file_dict["pluggable"])
 
+                    print("如 ri: ", plugin_file_path, file_dict["pluggable"],"\n")
+                    is_valid, messages = cls._validate_file_for_pluggable(plugin_file_path, file_dict["pluggable"])
+                    print("\n 外 _validate_file_for_pluggable : ", is_valid, messages)
                     if not is_valid:
                         is_success = False
+                        # print(" ------------is_success--------- \n")
                         list(map(lambda m: install_messages.append("\n%s: %s" % (file_dict["path"], m)), messages))
-
+                        # print("返回了 : ", install_messages)
                         continue
 
                 installed_files.append(file_dict)
@@ -114,9 +119,10 @@ class Plugin:
                 # File Callback
                 if "pluggable" in file_dict:
                     pluggable_classes[file_dict["pluggable"]].on_file_install(**file_dict)
-
+            print("is_success : ", is_success,not is_success)
             if not is_success:
                 raise PluginError("Offshoot Plugin File Install Errors: %s" % "".join(install_messages))
+
         except PluginError as e:
             print("\nThere was a problem during installation... Reverting!")
 
@@ -242,12 +248,13 @@ class Plugin:
 
     @classmethod
     def _validate_file_for_pluggable(cls, file_path, pluggable):
+        print("新函数的开始 05 : ",file_path, pluggable)
         pluggable_classes = offshoot.pluggable_classes()
-
+        print("pluggable_classes :" ,pluggable_classes)
         if pluggable not in pluggable_classes:
             raise PluginError("The Plugin definition specifies an invalid pluggable: %s => %s" % (file_path, pluggable))
 
-        pluggable_class = pluggable_classes[pluggable]
+        pluggable_class = pluggable_classes[pluggable] # <class 'serpent.game.Game'>
 
         return offshoot.validate_plugin_file(
             file_path,
