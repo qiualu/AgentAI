@@ -12,15 +12,18 @@ import time
 class SerpentMLAGame(Game, metaclass=Singleton):
 
     def __init__(self, **kwargs):
+
+
+
         kwargs["platform"] = "executable"
 
-        kwargs["window_name"] = "WINDOW_NAME"
+        kwargs["window_name"] = "WINDOW_NAME44444444444444"
 
         
         
-        kwargs["executable_path"] = "EXECUTABLE_PATH"
+        kwargs["executable_path"] = "EXECUTABLE_PATH5555555555"
         
-        
+        print("脚本当中 kwargs ", kwargs)
 
         super().__init__(**kwargs)
 
@@ -30,7 +33,7 @@ class SerpentMLAGame(Game, metaclass=Singleton):
         self.environments = dict()
         self.environment_data = dict()
 
-    @property
+    @property  # 装饰器 可以把函数变成直接读取 s = self.area
     def screen_regions(self):
         regions = {
             "SAMPLE_REGION": (0, 0, 0, 0)
@@ -38,7 +41,8 @@ class SerpentMLAGame(Game, metaclass=Singleton):
 
         return regions
 
-    def after_launch(self):
+    # Not  after_launch
+    def _after_launch(self):
         self.is_launched = True
 
         current_attempt = 1
