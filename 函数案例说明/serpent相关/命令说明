@@ -1,0 +1,26 @@
+
+
+
+pip install h5py
+conda install h5py
+pip install scikit-image -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+# 创建游戏插件
+u: python Serpent.py generate game
+u: game_name = MLA  game_platform = executable  # 输入 马里奥
+def: prepare_game_plugin(game_name, game_platform) # 复制插件模板文件 并把类修改添加游戏名
+# 自动运行 cmd 下面的代码分割后的命令
+subprocess.call(shlex.split(f"python Serpent.py  activate Serpent{game_name}GamePlugin"))
+def: activate(plugin_name) # "激活一个插件",
+    subprocess.call(shlex.split(f"offshoot install {plugin_name}"))
+
+
+offshoot (install  uninstall)
+运行 cmd : > python -m plugins.SerpentMLAGamePlugin.plugin install\uninstall
+offshoot.executable_hook(SerpentGamePlugin)
+def : executable_hook()
+
+SerpentGamePlugin 继承 offshoot.Plugin
+plugin_class.install() == offshoot.Plugin.install()
+plugin_class.uninstall() == offshoot.Plugin.uninstall()
+
