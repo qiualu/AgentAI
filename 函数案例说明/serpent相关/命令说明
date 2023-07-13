@@ -1,26 +1,117 @@
 
+cd E:\Projece\python\SerpentAI\serpent
 
 
+相关库
+pip install offshoot
+pip install mss
 pip install h5py
 conda install h5py
 pip install scikit-image -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip install sneakysnek
+
 
 # 创建游戏插件
 u: python Serpent.py generate game
 u: game_name = MLA  game_platform = executable  # 输入 马里奥
-def: prepare_game_plugin(game_name, game_platform) # 复制插件模板文件 并把类修改添加游戏名
-# 自动运行 cmd 下面的代码分割后的命令
-subprocess.call(shlex.split(f"python Serpent.py  activate Serpent{game_name}GamePlugin"))
-def: activate(plugin_name) # "激活一个插件",
-    subprocess.call(shlex.split(f"offshoot install {plugin_name}"))
+    def: prepare_game_plugin(game_name, game_platform) # 复制插件模板文件 并把类修改添加游戏名
+    # 自动运行 cmd 下面的代码分割后的命令
+    subprocess.call(shlex.split(f"python Serpent.py  activate Serpent{game_name}GamePlugin"))
+    def: activate(plugin_name) # "激活一个插件",
+        subprocess.call(shlex.split(f"offshoot install {plugin_name}"))
+
+    手动激活 python .\Serpent.py activate SerpentMLAGamePlugin
+
+    offshoot (install  uninstall)
+    运行 cmd : > python -m plugins.SerpentMLAGamePlugin.plugin install\uninstall
+    offshoot.executable_hook(SerpentGamePlugin)
+    def : executable_hook()
+
+    SerpentGamePlugin 继承 offshoot.Plugin
+    plugin_class.install() == offshoot.Plugin.install()
+    plugin_class.uninstall() == offshoot.Plugin.uninstall()
+
+清华大学：https://pypi.tuna.tsinghua.edu.cn/simple/
+阿里云：http://mirrors.aliyun.com/pypi/simple/
+中国科技大学：https://pypi.mirrors.ustc.edu.cn/simple/
+豆瓣：http://pypi.douban.com/simple/
+
+# 创建代理
+u: python Serpent.py generate game_agent
+u: game_name = MLA
+    cmd : python Serpent.py activate SerpentMLAGameAgentPlugin
+
+# 启动游戏
+运行 serpent launch SuperHexagon
+
+    游戏将会开始运行。如果你的游戏被移动到了屏幕左上角的话，这说明 Serpent.AI 可以定位到这个游戏窗口。
+
+    让游戏在那里运行着不要管它。
 
 
-offshoot (install  uninstall)
-运行 cmd : > python -m plugins.SerpentMLAGamePlugin.plugin install\uninstall
-offshoot.executable_hook(SerpentGamePlugin)
-def : executable_hook()
+Hello World 你好，世界！
+编辑 plugins/SerpentSuperHexagonGameAgentPlugin/files/serpent_SuperHexagon_game_agent.py.
 
-SerpentGamePlugin 继承 offshoot.Plugin
-plugin_class.install() == offshoot.Plugin.install()
-plugin_class.uninstall() == offshoot.Plugin.uninstall()
+更改 handle_play 函数内容，使之看起来像这样:
+
+    def handle_play(self, game_frame):
+        print("Hello World!")
+运行 serpent play SuperHexagon SerpentSuperHexagonGameAgent
+
+一切顺利的话，你会在你的终端中开始看到一连串输出的 "Hello World!" 字样。
+
+
+
+更加可视化的方式
+在刚才的样例中，每次你的终端中出现一个新的 "Hello World!" 字段，你的游戏代理程序都获取到了来自游戏的最新的一帧图像。你有可能已经发现了这个流传输并不是特别的快，这是因为程序设置了一个限制器，它会限制每秒钟代理程序能获取和处理图像帧的数量。这个参数是可以自行定义的 ( 查看 config/config.plugins.yml )，我们将默认参数设置为 2 FPS 是有原因的，这就意味着相当于 120 APM ( 每分钟操作次数 )的操作手速了，这已经快到足够应对绝大多数市面上的游戏了。除非你在开发纯粹处理模拟控制的游戏 ( 举例来说，赛车游戏 )，否则以一个极高的 APM 去处理普通的游戏的话，游戏操作本身会变得 不那么自然 ，而且很多情况下你的代理模型会反应过激。
+
+我们先就此打住，让我们在输出 "Hello World!" 的基础上更直观可视化一些。Serpent.AI 中内嵌了一个名为可视化调试器的应用，它可以在代理运行的同时让你可以方便的检测图像信息。
+
+打开另一个终端，运行 serpent visual_debugger
+
+你应该会看到一个类似这样的界面:
+
+如果你需要的话，调整大小然后放在游戏界面的下面。
+   ....
+现在把 handle_play 改为如下这样:
+
+    def handle_play(self, game_frame):
+        print("Hello World!")
+
+        for i, game_frame in enumerate(self.game_frame_buffer.frames):
+            self.visual_debugger.store_image_data(
+                game_frame.frame,
+                game_frame.frame.shape,
+                str(i)
+            )
+进入 Super Hexagon 游戏的难度选择界面。
+
+运行 serpent play SuperHexagon SerpentSuperHexagonGameAgent
+
+这样你应该就已经能在可视化调试器中看到循环显示的逐帧画面了，差不多跟终端中显示新的 "Hello World!" 字段的节奏一致。
+
+
+游戏代理会自动维护一些从游戏本身获取的图像帧，在本例中代理程序可以把这些图像帧传递给可视化调试器。
+
+更有交互性的尝试
+作为本 Serpent.AI 样例的最后一步，让我们来添加一些键盘交互吧。 首先导入需要的库，在agent file中增加：
+
+from serpent.input_controller import KeyboardKey
+按如下方式修改 handle_play 函数:
+
+    def handle_play(self, game_frame):
+        print("Hello World!")
+
+        for i, game_frame in enumerate(self.game_frame_buffer.frames):
+            self.visual_debugger.store_image_data(
+                game_frame.frame,
+                game_frame.frame.shape,
+                str(i)
+            )
+
+        self.input_controller.tap_key(KeyboardKey.KEY_RIGHT)
+你能猜到会发生什么吗？
+
+自己动手试试吧！运行 serpent play SuperHexagon SerpentSuperHexagonGameAgent
+
 

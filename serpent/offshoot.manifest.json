@@ -1,5 +1,49 @@
 {
     "plugins": {
-
+        "SerpentMLAGamePlugin": {
+            "name": "SerpentMLAGamePlugin",
+            "version": "0.1.0",
+            "files": [
+                {
+                    "path": "serpent_MLA_game.py",
+                    "pluggable": "Game"
+                }
+            ],
+            "plugins": [],
+            "libraries": [],
+            "config": {
+                "fps": 2
+            }
+        },
+        "SerpentDNFGamePlugin": {
+            "name": "SerpentDNFGamePlugin",
+            "version": "0.1.0",
+            "files": [
+                {
+                    "path": "serpent_DNF_game.py",
+                    "pluggable": "Game"
+                }
+            ],
+            "plugins": [],
+            "libraries": [],
+            "config": {
+                "fps": 2
+            }
+        },
+        "SerpentMLAGameAgentPlugin": {
+            "name": "SerpentMLAGameAgentPlugin",
+            "version": "0.1.0",
+            "files": [
+                {
+                    "path": "serpent_MLA_game_agent.py",
+                    "pluggable": "GameAgent"
+                }
+            ],
+            "plugins": [],
+            "libraries": [],
+            "config": {
+                "frame_handler": "PLAY"
+            }
+        }
     }
 }

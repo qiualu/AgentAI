@@ -9,14 +9,15 @@ import offshoot
 class Manifest:
 
     def __init__(self, **kwargs):
-        print("Editlibrary.yl Manifest 插件管理 文件 offshoot.manifest.json")
-        self.file_path = kwargs.get("file_path", "offshoot.manifest.json")
-        # print("file_path",self.file_path,os.getcwd())
 
+        self.file_path = kwargs.get("file_path", "offshoot.manifest.json")
+        # print("file_path : ",self.file_path,os.getcwd())
+        # offshoot.manifest.json 写入 json.dumps({"plugins": {}}
+        print(self.file_path,not os.path.isfile(self.file_path))
         if not os.path.isfile(self.file_path):
             with open(self.file_path, "w") as f:
                 f.write(json.dumps({"plugins": {}}))
-
+                print("写入配置文件 offshoot.manifest.json",self.file_path)
     def list_plugins(self):
         with open(self.file_path, "r") as f:
             manifest = json.loads(f.read())

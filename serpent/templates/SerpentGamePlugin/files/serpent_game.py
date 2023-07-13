@@ -38,7 +38,8 @@ class SerpentGame(Game, metaclass=Singleton):
 
         return regions
 
-    def after_launch(self):
+    # Not  after_launch
+    def _after_launch(self):
         self.is_launched = True
 
         current_attempt = 1
