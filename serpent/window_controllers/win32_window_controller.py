@@ -15,6 +15,8 @@ class Win32WindowController(WindowController):
 
     def locate_window(self, name):
         global window_id
+
+        # print("Win32WindowController locate_window : ",name)
         window_id = win32gui.FindWindow(None, name)
 
         if window_id != 0:

@@ -30,6 +30,9 @@ def plugin_main(command):
     print("plugin_main 插件文件开始运行")
     executable_hook(SerpentGamePlugin, command)
 
+def plugin_init():
+    print("plugin_init 初始化")
+
 
 if __name__ == "__main__":
     offshoot.executable_hook(SerpentGamePlugin)

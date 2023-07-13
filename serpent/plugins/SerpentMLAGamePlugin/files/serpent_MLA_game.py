@@ -13,15 +13,13 @@ class SerpentMLAGame(Game, metaclass=Singleton):
 
     def __init__(self, **kwargs):
 
-
-
         kwargs["platform"] = "executable"
 
-        kwargs["window_name"] = "WINDOW_NAME44444444444444"
+        kwargs["window_name"] = "VirtuaNESex - 超级马里奥兄弟 [F0REVERD汉化]"
 
         
         
-        kwargs["executable_path"] = "EXECUTABLE_PATH5555555555"
+        kwargs["executable_path"] = r"D:\BaiduNetdiskDownload\小霸王\小霸王游戏\FC全集\★★★FC模拟器★★★【打开模拟器，把游戏拖到模拟器运行】\VirtuaNESex.exe"
         
         print("脚本当中 kwargs ", kwargs)
 

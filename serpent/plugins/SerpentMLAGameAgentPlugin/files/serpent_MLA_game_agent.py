@@ -14,4 +14,5 @@ class SerpentMLAGameAgent(GameAgent):
         pass
 
     def handle_play(self, game_frame, game_frame_pipeline):
+        print("Hello World!")
         pass

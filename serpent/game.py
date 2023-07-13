@@ -9,7 +9,7 @@ import shlex
 import time
 import os, os.path
 import atexit
-
+import importlib
 from serpent.game_agent import GameAgent
 
 from serpent.game_launchers import *
@@ -57,7 +57,7 @@ class Game(Pluggable):
         self.window_geometry = None
 
         self.dashboard_window_id = None
-
+        # 操控窗口的类
         self.window_controller = WindowController()
 
         self.is_launched = False
@@ -125,11 +125,22 @@ class Game(Pluggable):
     def launch(self, dry_run=False):
 
         print(" 游戏开始运行000 ")
-        return
+
         self.before_launch()
 
         if not dry_run:
+            print(f"开始运行游戏玩家游戏 打开exe文件：{self.game_name}")
             self.game_launcher().launch(**self.kwargs)
+
+        # 触发插件启动后的特定初始化过程
+        plugin_module = importlib.import_module('serpent.plugins.Serpent%sGamePlugin.plugin' % self.game_name)
+        # 获取 plugin_main 函数
+        plugin_init = getattr(plugin_module, 'plugin_init')
+        # 调用 plugin_main 函数
+
+        plugin_init()  # 安装插件
+        # 执行游戏玩家游戏
+        print(f"exe 运行成功 ")
 
         self.after_launch()
 
@@ -170,18 +181,29 @@ class Game(Pluggable):
 
         current_attempt = 1
 
-        while current_attempt <= 100:
+        print("等待游戏打开 : ",self.window_name)
+        loop = 10
+        while current_attempt <= loop:
             self.window_id = self.window_controller.locate_window(self.window_name)
+            # print("尝试获取游戏窗口", current_attempt, "次")
 
             if self.window_id not in [0, "0"]:
                 break
+            current_attempt += 1
+            time.sleep(1)
 
-            time.sleep(0.1)
+            # time.sleep(0.1)
 
+        # if self.window_id in [0, "0"]:
+        #     print("尝试获取游戏失败")
+        #     return
+        print("窗口句柄 : ", self.window_id)
+
+        # return
         time.sleep(3)
 
         if self.window_id in [0, "0"]:
-            raise SerpentError("Game window not found...")
+            raise SerpentError("游戏窗口没有发现 ...")
 
         self.window_controller.move_window(self.window_id, 0, 0)
 

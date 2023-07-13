@@ -1,0 +1,23 @@
+
+
+
+
+
+# 获取窗口句柄id
+self.window_id = self.window_controller.locate_window(self.window_name)
+    WindowController类  对下面的类进行再封装   serpent/window_controller.py
+    Win32WindowController类 操控窗口相关 获取的接口分开系统  serpent/window_controllers/win32_window_controller.py
+
+    WindowController类 窗口类
+    window_controller = WindowController()
+    获取句柄 window_id = window_controller.locate_window(winname)
+    移动窗口 window_controller.move_window(window_id, 0, 0)
+    改变窗口 window_controller.resize_window(window_id, 300, 500)
+    激活窗口 window_controller.bring_window_to_top(window_id)
+    激活窗口 window_controller.focus_window(window_id)
+    是否有焦点 focused = window_controller.is_window_focused(window_id)
+    焦点窗口 focused = window_controller.get_focused_window_name()
+    获取窗口大小位置 dwh = window_controller.get_window_geometry(window_id)
+
+
+

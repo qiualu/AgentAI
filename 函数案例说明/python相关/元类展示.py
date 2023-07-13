@@ -31,6 +31,9 @@ class Game(Pluggable):
     def Gprint(self):
         print("Game Gprint ")
 
+    def Start(cls):
+        cls.PrintSM()
+
 class SerpentMLAGame(Game, metaclass=Singleton):
 
     def __init__(self, **kwargs):
@@ -75,7 +78,7 @@ def main():
     game.add()
     print("G ", game.radius)
     game.Gprint()
-
+    game.Start()
     print("G ",game.window_name)
 
 

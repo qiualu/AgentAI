@@ -150,15 +150,38 @@ def pluginDebug():
         game.launch()
 
         print(" ------------- ")
-        print(game.window_name)
-        print(game.redis_client)
-        print(game.platform)
+        # print(game.window_name)
+        # print(game.redis_client)
+        # print(game.platform)
 
         return
 
+def windows():
+    windows_name = "VirtuaNESex - 超级马里奥兄弟 [F0REVERD汉化]"
+
+    from plugins.SerpentMLAGamePlugin.files.serpent_MLA_game import SerpentMLAGame
+    game = SerpentMLAGame()
+    game.window_controller.locate_window(windows_name)
+
+    adapter = game.window_controller._load_adapter()()
+    print("adapter : ",game.game_name)
+    print("adapter : ", game.window_name)
+    # print("adapter : ", game.name)
 
 
+import shlex
+import subprocess
+def subprocessPopen():
+    executable_path = r"D:\BaiduNetdiskDownload\小霸王\小霸王游戏\FC全集\★★★FC模拟器★★★【打开模拟器，把游戏拖到模拟器运行】\VirtuaNESex.exe"
 
+    print(shlex.split(executable_path))
+    # subprocess.Popen(shlex.split(executable_path))
+    subprocess.Popen(executable_path)
+
+
+def run_plugin_init():
+    from serpent.plugins.SerpentMLAGamePlugin.plugin import plugin_init
+    plugin_init()
 
 
 if __name__ == '__main__':
@@ -170,6 +193,12 @@ if __name__ == '__main__':
     # activateplugin("SerpentMLAGamePlugin")
 
     # python_xg()
+    # 测试运行游戏的脚本
     pluginDebug()
+    # 测试cmd 打开游戏
+    # subprocessPopen()
+    # 测试获取窗口相关 系统
+    # windows()
 
-
+    # 运行 测试 exe 引导打开游戏
+    # run_plugin_init()
