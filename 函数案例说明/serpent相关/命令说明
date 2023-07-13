@@ -1,6 +1,8 @@
 
 cd E:\Projece\python\SerpentAI\serpent
 
+强制推送覆盖 仓库
+git push --force origin main
 
 相关库
 pip install offshoot
@@ -10,6 +12,7 @@ conda install h5py
 pip install scikit-image -i https://pypi.tuna.tsinghua.edu.cn/simple
 pip install sneakysnek
 
+git
 
 # 创建游戏插件
 u: python Serpent.py generate game
