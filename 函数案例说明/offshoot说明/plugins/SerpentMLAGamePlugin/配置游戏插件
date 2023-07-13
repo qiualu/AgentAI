@@ -1,0 +1,17 @@
+为了通过 Serpent.AI 启动 Super Hexagon 游戏，你需要在生成的游戏插件文件中进行几处小修改。
+
+用你之前记下的窗口名替换掉 WINDOW_NAME 字段。在这个简单的例子里，请使用 Super Hexagon 替换掉 WINDOW_NAME。
+用 Steam 的 游戏编号 (APPID) 取代 APP_ID 字段。在这个例子里，请使用 221640 替换掉 APP_ID。
+
+   def __init__(self, **kwargs):
+
+        kwargs["platform"] = "executable"
+
+        kwargs["window_name"] = "WINDOW_NAME"
+
+        kwargs["executable_path"] = "EXECUTABLE_PATH"
+
+        super().__init__(**kwargs)
+
+        self.api_class = StreetFighterXMegaManAPI
+        self.api_instance = None

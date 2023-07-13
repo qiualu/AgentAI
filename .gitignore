@@ -11,7 +11,7 @@ __pycache__/
 
 .python-version
 
-plugins/
+# plugins/
 tools
 
 *.egg-info
