@@ -222,13 +222,15 @@ class Game(Pluggable):
 
 
     def play(self, game_agent_class_name="GameAgent", frame_handler=None, **kwargs):
+        print("----------------最后一层 55512-------------------")
         if not self.is_launched:
             raise GameError(f"Game '{self.__class__.__name__}' is not running...")
 
-        self.start_crossbar()
-        time.sleep(3)
+        # 打开 crossbar 通信 暂时不用
 
-        self.start_input_controller()
+        # self.start_crossbar()
+        # time.sleep(3)
+        # self.start_input_controller()
 
         game_agent_class = offshoot.discover("GameAgent", selection=game_agent_class_name).get(game_agent_class_name, GameAgent)
 
@@ -306,14 +308,17 @@ class Game(Pluggable):
         if self.frame_grabber_process is not None:
             self.stop_frame_grabber()
 
-        frame_grabber_command = f"serpent grab_frames {self.window_geometry['width']} {self.window_geometry['height']} {self.window_geometry['x_offset']} {self.window_geometry['y_offset']}"
+        frame_grabber_command = f"python Serpent.py  grab_frames {self.window_geometry['width']} {self.window_geometry['height']} {self.window_geometry['x_offset']} {self.window_geometry['y_offset']}"
 
         pipeline_string = pipeline_string or self.frame_transformation_pipeline_string
 
         if pipeline_string is not None:
             frame_grabber_command += f" {pipeline_string}"
 
+
+
         self.frame_grabber_process = subprocess.Popen(shlex.split(frame_grabber_command))
+        print(" 处理错误 CMD : ", self.frame_grabber_process,type(self.frame_grabber_process))
 
         signal.signal(signal.SIGINT, self._handle_signal_frame_grabber)
         signal.signal(signal.SIGTERM, self._handle_signal_frame_grabber)

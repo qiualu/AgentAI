@@ -16,9 +16,9 @@ from serpent.frame_transformation_pipeline import FrameTransformationPipeline
 
 redis_client = StrictRedis(**config["redis"])
 
-
+# 抓取帧的类 可以从屏幕上抓取指定区域的帧
 class FrameGrabber:
-
+    # 构造方法，初始化FrameGrabber对象
     def __init__(self, width=640, height=480, x_offset=0, y_offset=0, fps=30, pipeline_string=None, buffer_seconds=5):
         self.width = width
         self.height = height
@@ -40,7 +40,7 @@ class FrameGrabber:
         # Clear any previously stored frames
         self.redis_client.delete(config["frame_grabber"]["redis_key"])
         self.redis_client.delete(config["frame_grabber"]["redis_key"] + "_PIPELINE")
-
+    # 开始抓取帧的循环，将抓取到的帧处理后存储到Redis缓存中。
     def start(self):
         while True:
             cycle_start = time.time()
@@ -83,7 +83,7 @@ class FrameGrabber:
 
             if frame_time_left > 0:
                 time.sleep(frame_time_left)
-
+    # 抓取帧的方法，使用mss库从屏幕上抓取指定区域的帧，并返回处理后的帧。
     def grab_frame(self):
         frame = np.array(
             self.screen_grabber.grab({
@@ -98,10 +98,10 @@ class FrameGrabber:
         frame = frame[..., [2, 1, 0, 3]]
 
         return frame[..., :3]
-
+    # 判断是否存在PNG转换流水线的私有方法，用于判断帧转换流水线是否以"|PNG"结尾。
     def _has_png_transformation_pipeline(self):
         return self.frame_transformation_pipeline and self.frame_transformation_pipeline.pipeline_string and self.frame_transformation_pipeline.pipeline_string.endswith("|PNG")
-
+    # 类方法，从Redis缓存中获取指定索引的帧，并返回一个GameFrameBuffer对象
     @classmethod
     def get_frames(cls, frame_buffer_indices, frame_type="FULL", **kwargs):
         while True:
@@ -131,7 +131,7 @@ class FrameGrabber:
             game_frame_buffer.add_game_frame(game_frame)
 
         return game_frame_buffer
-
+    # 类方法，从Redis缓存中获取指定索引的帧和转换后的帧，并返回两个GameFrameBuffer对象
     @classmethod
     def get_frames_with_pipeline(cls, frame_buffer_indices, **kwargs):
         while True:

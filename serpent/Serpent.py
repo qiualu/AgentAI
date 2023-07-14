@@ -433,13 +433,13 @@ def play(game_name, game_agent_name, frame_handler=None):
     game_agent_class = game_agent_class_mapping.get(game_agent_name)
     # game_agent_class -> plugins.SerpentMLAGameAgentPlugin.files.serpent_MLA_game_agent.SerpentMLAGameAgent
     # print(" 代理类 *** ", game_agent_class,type(game_agent_class))
-
+    print(" ************* YL : 初始化相关类 ")
     game_instance = game_agent_class(game = game, game_name = game_name, frame_handler = frame_handler)
     if game_agent_class is None:
         raise Exception(f"Game Agent '{game_agent_name}' wasn't found. Make sure the plugin is installed.")
-
+    print(" ************* YL : game.play  ")
     game.play(game_agent_class_name=game_agent_name, frame_handler=frame_handler)
-
+    print(" ************* YL : 应该是最后一层了 ")
 
 def record(game_name, game_agent_name, frame_count=4, frame_spacing=4):
     game = initialize_game(game_name)

@@ -1,5 +1,5 @@
 
-cd E:\Projece\python\SerpentAI\serpent
+cd E:\Projece\python\SerpentAI\AgentAI\serpent
 
 强制推送覆盖 仓库
 git push --force origin main
@@ -126,3 +126,80 @@ from serpent.input_controller import KeyboardKey
 自己动手试试吧！运行 serpent play SuperHexagon SerpentSuperHexagonGameAgent
 
 
+crossbar start --config crossbar.json
+wamp介绍及crossbar.io服务搭建
+wamp 推送/订阅消息讲解
+wamp官网：http://wamp-proto.org/
+crossbar官网：https://crossbar.io/
+
+pip install
+
+crossbar init
+
+
+运行过程 :
+# 启动代理 SerpentMLAGameAgent
+u: python Serpent.py play MLA SerpentMLAGameAgent
+game_agent_class -> plugins.SerpentMLAGameAgentPlugin.files.serpent_MLA_game_agent.SerpentMLAGameAgent
+# 初始化 MLA SerpentMLAGameAgent frame_handler=None
+# game = Game 类的初始化也游戏已启动
+* game_agent_class(game = game, game_name = "MLA", frame_handler = frame_handler)
+    初始化redis self.redis_client = StrictRedis(**config["redis"])
+    调试过程中存储和检索图像数据 self.visual_debugger = VisualDebugger()
+    一个游戏帧缓冲区类 self.game_frame_buffer
+    这个类用于识别游戏中的精灵 self.sprite_identifier = SpriteIdentifier()
+    跟踪分析事件 self.analytics_client = AnalyticsClient
+
+    ## cmd 抓取帧的类 初始化
+    * python Serpent.py grab_frames 1039 615 10 53
+    抓取帧的类 self.frame_grabber_process
+
+
+* game.play(game_agent_class_name="SerpentMLAGameAgent", frame_handler=frame_handler)
+
+
+
+启动可视化调试器
+像框架中的大多数功能一样，通过 serpent 命令就可以启动可视化调试器。
+
+运行  python Serpent.py visual_debugger
+
+你将会看到一个如下图所示界面的应用:
+
+python Serpent.py setup gui
+
+
+向可视化调试器中传递图像
+Visual Debugger 实例提供了接下来应用程序要处理的图像数据的存储函数接口。
+
+self.store_image_data
+方法签名 store_image_data(self, image_data, image_shape, bucket="debug")
+
+image_data: 一个存储形状 (rows, cols, color_channels) 的 numpy ndarray 数组，dtype 为 np.uint8
+image_shape: image_data 的形状
+bucket: 在可视化调试器内，要显示该图像的指定分组标签
+示例
+import skimage.io
+from serpent.visual_debugger.visual_debugger import VisualDebugger
+
+image = skimage.io.imread("image.png")
+
+visual_debugger = VisualDebugger()
+visual_debugger.store_image_data(
+    image_data = image,
+    image_shape = image.shape,
+    bucket = "0"
+)
+VisualDebugger 实例可在你的代码的任何位置实例化。游戏代理已经内含了一个 self.visual_debugger 实例了。
+
+自定义可视化调试器分组
+默认情况下，可视化调试器会将待显示的图像显示在对应为 “0”，“1”，“2” 和 “3” 的标签桶内。这些桶标签可以通过编辑 config/config.yml 文件进行定制。相关的代码段如下所示:
+
+visual_debugger:
+    redis_key_prefix: SERPENT:VISUAL_DEBUGGER
+    available_buckets:
+        - "0"
+        - "1"
+        - "2"
+        - "3"
+你可以很简单的将 available_buckets 更改为任何你想要的标签。可视化调试器会将其进行适配调整并为每个配置标签的桶分配空间。
