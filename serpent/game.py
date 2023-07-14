@@ -126,21 +126,21 @@ class Game(Pluggable):
 
         print(" 游戏开始运行000 ")
 
-        self.before_launch()
+        self.before_launch() # 没作用
 
         if not dry_run:
             print(f"开始运行游戏玩家游戏 打开exe文件：{self.game_name}")
             self.game_launcher().launch(**self.kwargs)
 
-        # 触发插件启动后的特定初始化过程
-        plugin_module = importlib.import_module('serpent.plugins.Serpent%sGamePlugin.plugin' % self.game_name)
-        # 获取 plugin_main 函数
-        plugin_init = getattr(plugin_module, 'plugin_init')
-        # 调用 plugin_main 函数
+            # 触发插件启动后的特定初始化过程
+            plugin_module = importlib.import_module('serpent.plugins.Serpent%sGamePlugin.plugin' % self.game_name)
+            # 获取 plugin_main 函数
+            plugin_init = getattr(plugin_module, 'plugin_init')
+            # 调用 plugin_main 函数
 
-        plugin_init()  # 安装插件
-        # 执行游戏玩家游戏
-        print(f"exe 运行成功 ")
+            plugin_init()  # 安装插件
+            # 执行游戏玩家游戏
+            print(f"exe 运行成功 ")
 
         self.after_launch()
 
@@ -197,7 +197,7 @@ class Game(Pluggable):
         # if self.window_id in [0, "0"]:
         #     print("尝试获取游戏失败")
         #     return
-        print("窗口句柄 : ", self.window_id)
+        print("游戏正在运行 窗口句柄 : ", self.window_id)
 
         # return
         time.sleep(3)
@@ -217,7 +217,9 @@ class Game(Pluggable):
 
         self.window_geometry = self.extract_window_geometry()
 
-        print(self.window_geometry)
+        print("窗口信息 : ",self.window_geometry)
+
+
 
     def play(self, game_agent_class_name="GameAgent", frame_handler=None, **kwargs):
         if not self.is_launched:

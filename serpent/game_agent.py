@@ -52,13 +52,14 @@ class GameAgent(offshoot.Pluggable):
         super().__init__(**kwargs)
 
         self.game = kwargs["game"]
-        self.game.api
+        # self.game.api
 
         self.config = config.get(f"{self.__class__.__name__}Plugin") or dict()
 
         self.redis_client = StrictRedis(**config["redis"])
 
-        self.input_controller = kwargs["input_controller"]
+        # self.input_controller = kwargs["input_controller"]
+
         self.machine_learning_models = dict()
 
         self.frame_handlers = dict(

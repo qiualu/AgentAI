@@ -127,13 +127,13 @@ def discover(pluggable, scope=None, selection=None):
     valid_class_names = list()
     import_statements = list()
 
-    print("插件名字 : ",plugin_file_paths,pluggable)
+    # print("插件名字 : ",plugin_file_paths,pluggable,scope,selection)
 
     for plugin_file_path, pluggable in plugin_file_paths:
         plugin_module = plugin_file_path.replace(os.sep, ".").replace(".py", "")
 
         valid, plugin_class = file_contains_pluggable(plugin_file_path, pluggable)
-        # print("plugin_module", plugin_module)
+        # print("获取插件的名字和状态 : ", valid, plugin_class,type(plugin_class))
         # print("valid, plugin_class : ", valid, plugin_class)
         # valid, plugin_class = True SerpentMLAGame
 
@@ -153,7 +153,7 @@ def discover(pluggable, scope=None, selection=None):
     # print("import_statements : ", import_statements)
 
     for import_statement in import_statements:
-        print("导入信息 : " , import_statement)
+        # print("导入信息 : " , import_statement)
         if scope is not None:
             exec(import_statement, scope)
         else:
@@ -190,6 +190,8 @@ def file_contains_pluggable(file_path, pluggable):
 
             if pluggable in bases:
                 plugin_class = class_name
+
+    # print("导出结果 ",plugin_class)
 
     return [plugin_class is not None, plugin_class]
 

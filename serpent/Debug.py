@@ -178,6 +178,11 @@ def subprocessPopen():
     # subprocess.Popen(shlex.split(executable_path))
     subprocess.Popen(executable_path)
 
+# 测试代理
+def AgentDiscover():
+    from serpent.plugins.SerpentMLAGameAgentPlugin.files.serpent_MLA_game_agent import SerpentMLAGameAgent
+    game_class_mapping = SerpentMLAGameAgent(game="MLA", game_name="SerpentMLAGameAgent", some_other_parameter=True)
+
 
 def run_plugin_init():
     from serpent.plugins.SerpentMLAGamePlugin.plugin import plugin_init
@@ -194,7 +199,7 @@ if __name__ == '__main__':
 
     # python_xg()
     # 测试运行游戏的脚本
-    pluginDebug()
+    # pluginDebug()
     # 测试cmd 打开游戏
     # subprocessPopen()
     # 测试获取窗口相关 系统
@@ -202,3 +207,10 @@ if __name__ == '__main__':
 
     # 运行 测试 exe 引导打开游戏
     # run_plugin_init()
+
+    # 测试代理
+    AgentDiscover()
+
+
+
+

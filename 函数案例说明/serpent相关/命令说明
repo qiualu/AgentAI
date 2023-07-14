@@ -46,8 +46,10 @@ u: game_name = MLA
 
 
 
-# 启动游戏
+# 启动游戏  修改plugin_init 初始化exe是需要进行的特定操作 比如登陆什么的
 u : python Serpent.py  launch  MLA
+# 启动代理 SerpentMLAGameAgent
+u: python Serpent.py play MLA SerpentMLAGameAgent
 
 
 # 启动游戏

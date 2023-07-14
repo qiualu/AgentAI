@@ -4,6 +4,7 @@ from serpent.game_agent import GameAgent
 class SerpentMLAGameAgent(GameAgent):
 
     def __init__(self, **kwargs):
+        print(kwargs)
         super().__init__(**kwargs)
 
         self.frame_handlers["PLAY"] = self.handle_play
@@ -14,5 +15,5 @@ class SerpentMLAGameAgent(GameAgent):
         pass
 
     def handle_play(self, game_frame, game_frame_pipeline):
-        print("Hello World!")
+        print("Hello World!",game_frame, game_frame_pipeline)
         pass

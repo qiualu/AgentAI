@@ -35,6 +35,7 @@ from serpent.window_controller import WindowController
 
 
 import pyautogui,time
+import pyperclip
 
 def plugin_init():
     print("plugin_init 初始化")
@@ -58,12 +59,31 @@ def plugin_init():
         return
     # 激活窗口
     window_controller.focus_window(window_id)
+
+    # 记录路径打开最后关闭的游戏
     # 按下Alt键，然后依次按下对应的按键组合，模拟打开文件操作
+    # pyautogui.keyDown('alt')
+    # pyautogui.press('f')
+    # pyautogui.press('f')
+    # pyautogui.press('enter')
+    # pyautogui.keyUp('alt')
+
+    # 按照路径打开游戏
     pyautogui.keyDown('alt')
     pyautogui.press('f')
-    pyautogui.press('f')
-    pyautogui.press('enter')
+    pyautogui.press('O')
     pyautogui.keyUp('alt')
+    # 输入要打开的文件路径
+    file_path = r"D:\BaiduNetdiskDownload\小霸王\小霸王游戏\FC全集\超级马里奥兄弟 [F0REVERD汉化].nes"
+    # pyautogui.typewrite(file_path)
+
+    # 复制文件路径到剪贴板
+    pyperclip.copy(file_path)
+    # 模拟粘贴文件路径
+    pyautogui.hotkey('ctrl', 'v')
+
+    # 按下回车键确认打开文件
+    pyautogui.press("enter")
 
     # window_controller = WindowController()
     # window_id = window_controller.locate_window(winname)
