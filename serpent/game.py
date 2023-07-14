@@ -222,7 +222,7 @@ class Game(Pluggable):
 
 
     def play(self, game_agent_class_name="GameAgent", frame_handler=None, **kwargs):
-        print("----------------最后一层 55512-------------------")
+        # print("----------------最后一层 55512-------------------")
         if not self.is_launched:
             raise GameError(f"Game '{self.__class__.__name__}' is not running...")
 
