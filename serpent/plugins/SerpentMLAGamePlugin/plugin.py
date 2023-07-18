@@ -74,7 +74,9 @@ def plugin_init():
     pyautogui.press('O')
     pyautogui.keyUp('alt')
     # 输入要打开的文件路径
-    file_path = r"D:\BaiduNetdiskDownload\小霸王\小霸王游戏\FC全集\超级马里奥兄弟 [F0REVERD汉化].nes"
+    # file_path = r"D:\BaiduNetdiskDownload\小霸王\小霸王游戏\FC全集\超级马里奥兄弟 [F0REVERD汉化].nes"
+    file_path = r"D:\BaiduNetdiskDownload\小霸王\小霸王游戏\FC全集\16.Q版沙蛇 无限人.nes"
+
     # pyautogui.typewrite(file_path)
 
     # 复制文件路径到剪贴板
@@ -85,6 +87,37 @@ def plugin_init():
     # 按下回车键确认打开文件
     pyautogui.press("enter")
 
+
+    # 进入游戏
+    time.sleep(2)
+    pyautogui.press('k')
+    pyautogui.press('k')
+    pyautogui.press('k')
+    print("启动成功 1k")
+    # 进入游戏
+    time.sleep(2)
+    pyautogui.press('k')
+    pyautogui.press('k')
+    pyautogui.press('k')
+    print("启动成功 2k")
+    # 进入游戏
+    time.sleep(2)
+    pyautogui.press('k')
+    pyautogui.press('k')
+    pyautogui.press('k')
+    print("启动成功 3k")
+    # 进入游戏
+    time.sleep(2)
+    pyautogui.press('k')
+    pyautogui.press('k')
+    pyautogui.press('k')
+    print("启动成功 3k")# 进入游戏
+    time.sleep(2)
+    pyautogui.press('k')
+    pyautogui.press('k')
+    pyautogui.press('k')
+    print("启动成功 3k")
+    print("启动成功 k")
     # window_controller = WindowController()
     # window_id = window_controller.locate_window(winname)
     # print("window_id",window_id)

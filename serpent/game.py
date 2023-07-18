@@ -318,8 +318,8 @@ class Game(Pluggable):
 
 
         self.frame_grabber_process = subprocess.Popen(shlex.split(frame_grabber_command))
-        print(" 处理错误 CMD : ", self.frame_grabber_process,type(self.frame_grabber_process))
-
+        # print(" 处理错误 CMD : ", self.frame_grabber_process,type(self.frame_grabber_process))
+        print("初始化游戏插件以及相关模块")
         signal.signal(signal.SIGINT, self._handle_signal_frame_grabber)
         signal.signal(signal.SIGTERM, self._handle_signal_frame_grabber)
 
