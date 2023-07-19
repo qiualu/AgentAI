@@ -257,7 +257,7 @@ class Game(Pluggable):
 
         while self.redis_client.llen(config["frame_grabber"]["redis_key"]) == 0:
             time.sleep(0.1)
-
+        # 通过窗口标识符激活指定的窗口
         self.window_controller.focus_window(self.window_id)
 
         # Override FPS Config?
@@ -446,12 +446,20 @@ class Game(Pluggable):
 
 
     def printscreen(self):
-        # Get the screen image
-        self.window_controller.focus_window(self.window_id)
-        self.game_frame_limiter = GameFrameLimiter(fps=10)
 
         self.game_frame_limiter.start()
 
+        print(" s窗口ID : ",self.window_id)
+        print(self.window_name)
+        if not self.window_id:
+            self.window_id = self.window_controller.locate_window(self.window_name)
+
+        print(" d窗口ID : ", self.window_id)
+        # 通过窗口标识符激活指定的窗口
+        # self.window_controller.focus_window(self.window_id)
+
+        # Override FPS Config?
         game_frame, game_frame_pipeline = self.grab_latest_frame()
         print(game_frame, game_frame_pipeline)
 
+        self.game_frame_limiter.stop_and_delay()

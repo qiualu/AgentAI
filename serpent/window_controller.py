@@ -41,7 +41,7 @@ class WindowController:
         return self.adapter.get_window_geometry(window_id)
 
     def _load_adapter(self):
-        print("_load_adapter")
+        # print("_load_adapter")
         if is_linux():
             from serpent.window_controllers.linux_window_controller import LinuxWindowController
             return LinuxWindowController

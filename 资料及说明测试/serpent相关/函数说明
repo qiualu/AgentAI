@@ -21,3 +21,10 @@ self.window_id = self.window_controller.locate_window(self.window_name)
 
 
 
+self.grab_latest_frame()
+    FrameGrabber 类  抓取帧的类 可以从屏幕上抓取指定区域的帧
+    FrameGrabber.start  开始抓取帧的循环，将抓取到的帧处理后存储到Redis缓存中。
+    FrameGrabber.grab_frame  抓取帧的方法，使用mss库从屏幕上抓取指定区域的帧，并返回处理后的帧。
+    _has_png_transformation_pipeline # # 判断是否存在PNG转换流水线的私有方法，用于判断帧转换流水线是否以"|PNG"结尾。
+    get_frames # 类方法，从Redis缓存中获取指定索引的帧，并返回一个GameFrameBuffer对象
+    get_frames_with_pipeline  # 类方法，从Redis缓存中获取指定索引的帧和转换后的帧，并返回两个GameFrameBuffer对象

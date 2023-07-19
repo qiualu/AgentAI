@@ -478,7 +478,7 @@ def capture(capture_type, game_name, interval=1, extra=None, extra_2=None):
         raise Exception("Invalid capture command.")
 
     if capture_type == "frame":
-        game.kkkkkkk(frame_handler="COLLECT_FRAMES", interval=float(interval))
+        game.play(frame_handler="COLLECT_FRAMES", interval=float(interval))
     elif capture_type == "context":
         game.play(frame_handler="COLLECT_FRAMES_FOR_CONTEXT", interval=float(interval), context=extra, screen_region=extra_2)
     elif capture_type == "region":
