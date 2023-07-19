@@ -5,7 +5,7 @@ import ctypes
 print(is_windows())
 print(display_serpent_logo())
 
-
+import win32gui
 import pyautogui,time
 import pyperclip
 VK_J = 0x4A
@@ -29,3 +29,4 @@ while True:
     print("B a ", ad)
     if ad > 200:
         break
+jj

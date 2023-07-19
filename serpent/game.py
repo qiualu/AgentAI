@@ -227,10 +227,12 @@ class Game(Pluggable):
             raise GameError(f"Game '{self.__class__.__name__}' is not running...")
 
         # 打开 crossbar 通信 暂时不用
+        self.start_crossbar()
+        time.sleep(3)
+        self.start_input_controller()
 
-        # self.start_crossbar()
-        # time.sleep(3)
-        # self.start_input_controller()
+        # --------
+
 
         game_agent_class = offshoot.discover("GameAgent", selection=game_agent_class_name).get(game_agent_class_name, GameAgent)
 
@@ -441,3 +443,15 @@ class Game(Pluggable):
 
                 if do_exit:
                     exit()
+
+
+    def printscreen(self):
+        # Get the screen image
+        self.window_controller.focus_window(self.window_id)
+        self.game_frame_limiter = GameFrameLimiter(fps=10)
+
+        self.game_frame_limiter.start()
+
+        game_frame, game_frame_pipeline = self.grab_latest_frame()
+        print(game_frame, game_frame_pipeline)
+

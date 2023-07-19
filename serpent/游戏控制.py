@@ -1,91 +1,59 @@
 #!/usr/bin/env python
-import os
-import sys
-import shutil
-import subprocess
-import shlex
-import time
-import inspect
-import importlib
-#  添加当前包目录
 
-import os
-current_directory = os.path.dirname(os.path.abspath(__file__))
-parent_directory = os.path.dirname(current_directory)
-import sys
-sys.path.append(parent_directory)
+from serpent.Serpent import execute
+import socket,subprocess,shlex
+
+# 绑定的IP地址和端口号
+SERVER_IP = '127.0.0.1'
+SERVER_PORT = 8848
 
 
+from serpent.Serpent import initialize_game
 
-from serpent.utilities import clear_terminal, display_serpent_logo, is_linux, is_windows, wait_for_crossbar
-
-from serpent.window_controller import WindowController
-
-import offshoot
-# 代替 offshoot
-from serpent.Editlibrary.yl_offshoot.base import discover
-
-# Add the current working directory to sys.path to discover user plugins!
-sys.path.insert(0, os.getcwd())
-
-# On Windows, disable the Fortran CTRL-C handler that gets installed with SciPy
-if is_windows:
-    os.environ['FOR_DISABLE_CONSOLE_CTRL_HANDLER'] = 'T'
-
-VERSION = "2020.2.1"
-
-valid_commands = [
-    "创建游戏插件",
-    "创建游戏代理",
-    "启动游戏"
-]
-
-def 命令入口():
-    if len(sys.argv) == 1:
-        输出相关命令的说明()
-    elif len(sys.argv) > 1:
-        if sys.argv[1] == "-h" or sys.argv[1] == "--help":
-            输出相关命令的说明()
-        else:
-            command = sys.argv[1]
-
-            if command not in valid_commands:
-                # raise Exception("'%s' is not a valid Serpent command." % command)
-                print(" 输入错误  '%s' 不是本库的相关指令,查看 -h 帮助然后确定输入." % command)
-            函数指令集[command](*sys.argv[2:])
-
-def 输出相关命令的说明():
-    print(f"\n当前游戏控制的版本  v{VERSION}")
-    print("命令集 列表 :\n")
-
-    for command, description in command_description_mapping.items():
-        print(f"{command.rjust(16)}: {description}")
-
-    print("")
-
-def 创建游戏插件():
-    print("创建游戏插件")
-def 创建游戏代理():
-    print("创建游戏代理")
-def 启动游戏():
-    print("启动游戏")
+def UDP():
 
 
-函数指令集 = {
-    "创建游戏插件": 创建游戏插件,
-    "创建游戏代理": 创建游戏代理,
-    "启动游戏": 启动游戏
-}
+    # 创建UDP套接字
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+    # 将套接字绑定到指定的IP地址和端口号
+    server_socket.bind((SERVER_IP, SERVER_PORT))
+
+    print('UDP服务器已启动，等待客户端连接...')
+    game_name = "MLA"
+
+    game = initialize_game(game_name)
+
+    while True:
+        # 接收客户端发送的数据和客户端地址
+        data, client_address = server_socket.recvfrom(1024)
+        print('从客户端', client_address, '接收到数据:', data.decode()[:-1])
+        zl = data.decode()[:-1]
+        if zl == "10":
+            break
+        elif zl == "1": # 测试函数
+            subprocess.call(shlex.split(f"python Serpent.py test Serpent{game_name}GamePlugin"))
+        elif zl == "2": # 从游戏中捕捉帧
+            subprocess.call(shlex.split(f"python Serpent.py capture frame {game_name} 1"))
+        elif zl == "3":
+            subprocess.call(shlex.split(f"python Serpent.py dashboard"))
+        elif zl == "4":
+            game.launch() # 启动游戏
+        elif zl == "5":
+            game.launch(dry_run=True) # 激活窗口
+        elif zl == "6":
+            game.printscreen()
+
+        response = 'Hello, client!'
+        server_socket.sendto(response.encode(), client_address)
 
 
-command_description_mapping = {
-    "创建游戏插件": "创建游戏插件",
-    "创建游戏代理": "创建游戏代理",
-    "启动游戏": "启动游戏"
-}
-
+def main():
+    print("控制台启动")
+    # execute()
+    UDP()
 
 if __name__ == "__main__":
-    命令入口()
+    main()
 
 

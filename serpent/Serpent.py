@@ -35,27 +35,27 @@ if is_windows:
 
 VERSION = "2020.2.1"
 
-valid_commands = [
-    "setup",
-    "update",
-    "modules",
-    "grab_frames",
-    "launch",
-    "play",
-    "record",
-    "generate",
-    "activate",
-    "deactivate",
-    "plugins",
-    "train",
-    "capture",
-    "visual_debugger",
-    "window_name",
-    "record_inputs",
-    "dashboard",
-    "object_recognition",
-    "test"
-]
+# valid_commands = [
+#     "setup",
+#     "update",
+#     "modules",
+#     "grab_frames",
+#     "launch",
+#     "play",
+#     "record",
+#     "generate",
+#     "activate",
+#     "deactivate",
+#     "plugins",
+#     "train",
+#     "capture",
+#     "visual_debugger",
+#     "window_name",
+#     "record_inputs",
+#     "dashboard",
+#     "object_recognition",
+#     "test"
+# ]
 
 
 def execute():
@@ -67,9 +67,9 @@ def execute():
         else:
             command = sys.argv[1]
 
-            if command not in valid_commands:
+            if command not in command_function_mapping:
                 # raise Exception("'%s' is not a valid Serpent command." % command)
-                print(" 输入错误  '%s' 不是本库的相关指令,查看 -h 帮助然后确定输入." % command)
+                raise Exception(" 输入错误  '%s' 不是本库的相关指令,查看 -h 帮助然后确定输入." % command)
             command_function_mapping[command](*sys.argv[2:])
 
 
@@ -478,7 +478,7 @@ def capture(capture_type, game_name, interval=1, extra=None, extra_2=None):
         raise Exception("Invalid capture command.")
 
     if capture_type == "frame":
-        game.play(frame_handler="COLLECT_FRAMES", interval=float(interval))
+        game.kkkkkkk(frame_handler="COLLECT_FRAMES", interval=float(interval))
     elif capture_type == "context":
         game.play(frame_handler="COLLECT_FRAMES_FOR_CONTEXT", interval=float(interval), context=extra, screen_region=extra_2)
     elif capture_type == "region":
@@ -561,7 +561,6 @@ def generate_game_plugin():
             game_platform = 'custom'
 
 
-
     if game_platform not in ["steam", "executable", "web_browser", "custom"]:
         raise Exception("Invalid game platform.")
 
@@ -570,6 +569,7 @@ def generate_game_plugin():
 
     print(shlex.split(f"python Serpent.py test activate Serpent{game_name}GamePlugin"))
     subprocess.call(shlex.split(f"python Serpent.py activate Serpent{game_name}GamePlugin"))
+
     # subprocess.call(shlex.split(f"serpent activate Serpent{game_name}GamePlugin"))
 
 def generate_game_agent_plugin():
@@ -754,7 +754,7 @@ command_function_mapping = {
     "record": record,
     "generate": generate,
     "train": train,
-    "capture": capture,
+    "capture": capture, # "从游戏中捕获帧、屏幕区域和上下文",
     "visual_debugger": visual_debugger,
     "window_name": window_name,
     "record_inputs": record_inputs,

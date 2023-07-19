@@ -27,3 +27,10 @@ u: python Serpent.py capture region MLA 1 MAIN_MENU_LOAD_GAME
 捕获带标签的完整图像帧
 运行 serpent capture context <game_name> <interval> <context_name> 命令。(示例: serpent capture context SuperHexagon 1 main_menu)
 frame context region
+
+# wamp 手动启动,通讯  game.play中启动
+u: crossbar start --config crossbar.json
+        # 打开 crossbar 通信 暂时不用
+        self.start_crossbar()
+        time.sleep(3)
+        self.start_input_controller()
