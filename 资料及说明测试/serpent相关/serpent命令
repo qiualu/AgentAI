@@ -1,0 +1,29 @@
+
+
+
+cd E:\Projece\python\SerpentAI\AgentAI\serpent
+
+# 创建游戏插件
+u: python Serpent.py generate game
+u: game_name = MLA  game_platform = executable  # 输入 马里奥
+
+# 创建代理
+u: python Serpent.py generate game_agent
+u: game_name = MLA
+
+# 启动游戏  修改plugin_init 初始化exe是需要进行的特定操作 比如登陆什么的
+u : python Serpent.py  launch  MLA
+
+# 启动代理 SerpentMLAGameAgent
+u: python Serpent.py play MLA SerpentMLAGameAgent
+
+
+从游戏中捕捉帧
+u: python Serpent.py  capture frame MLA 1  命令捕获几帧图像(捕获的内容将存放在 datasets/collect_frames 目录中)。
+
+捕获按钮所在的屏幕区域 "MAIN_MENU_LOAD_GAME": (626, 429, 708, 510)
+u: python Serpent.py capture region MLA 1 MAIN_MENU_LOAD_GAME
+
+捕获带标签的完整图像帧
+运行 serpent capture context <game_name> <interval> <context_name> 命令。(示例: serpent capture context SuperHexagon 1 main_menu)
+frame context region

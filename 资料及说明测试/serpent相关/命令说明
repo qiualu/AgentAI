@@ -203,3 +203,12 @@ visual_debugger:
         - "2"
         - "3"
 你可以很简单的将 available_buckets 更改为任何你想要的标签。可视化调试器会将其进行适配调整并为每个配置标签的桶分配空间。
+
+
+
+
+
+game.play(frame_handler="COLLECT_FRAMES", interval=float(interval))
+spritex datasets/collect_frames/frame_1689692994.8735907.png
+
+E:\Projece\python\SerpentAI\AgentAI\serpent\datasets\collect_frames\frame_1689692994.8735907.png

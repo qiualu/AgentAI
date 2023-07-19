@@ -474,7 +474,7 @@ def capture(capture_type, game_name, interval=1, extra=None, extra_2=None):
     game = initialize_game(game_name)
     game.launch(dry_run=True)
 
-    if capture_type not in ["frame", "context", "region"]:
+    if capture_type not in ["frame", "context", "region","截一张图","持续截图"]:
         raise Exception("Invalid capture command.")
 
     if capture_type == "frame":
@@ -483,7 +483,8 @@ def capture(capture_type, game_name, interval=1, extra=None, extra_2=None):
         game.play(frame_handler="COLLECT_FRAMES_FOR_CONTEXT", interval=float(interval), context=extra, screen_region=extra_2)
     elif capture_type == "region":
         game.play(frame_handler="COLLECT_FRAME_REGIONS", interval=float(interval), region=extra)
-
+    elif capture_type == "截一张图":
+        pass
 
 def visual_debugger(*buckets):
     from serpent.visual_debugger.visual_debugger_app import VisualDebuggerApp

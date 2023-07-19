@@ -264,11 +264,14 @@ class Game(Pluggable):
 
         try:
             while True:
+                print(" 测试 01  ")
                 self.game_frame_limiter.start()
-
+                print(" 测试 02  ")
                 game_frame, game_frame_pipeline = self.grab_latest_frame()
+                print(" 测试 03  ")
 
                 try:
+                    print(" 测试 04  ")
                     if self.is_focused:
                         self.pause_callback_fired = False
                         game_agent.on_game_frame(game_frame, game_frame_pipeline, frame_handler=frame_handler, **kwargs)
