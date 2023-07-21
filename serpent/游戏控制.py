@@ -57,3 +57,11 @@ if __name__ == "__main__":
     main()
 
 
+'''
+##分别运行以下两行命令
+ 
+docker run -dit --name emqx -p 18083:18083 -p 1883:1883 -p 8083:8083 -p 8084:8084 emqx/emqx:latest
+ 
+docker exec -it  emqx /bin/sh
+
+'''
