@@ -1,115 +1,75 @@
 
 import threading
-import socket, time, win32con,win32gui
+import socket, time
 
 import pyautogui,os
 
 from serpent.DNF.windows import windows
-from serpent.window_controller import WindowController # 窗口句柄管理
-import shlex
-import subprocess
-import ctypes
 
 import cv2 , random
 from PIL import ImageGrab
 import numpy as np
 import mss
 
-class DNFmanage():
+class DNFmanage(windows):
     def __init__(self):
-        print("name ")
+        super().__init__()
         self.running = False
-        self.WeGame_id = 0
-        self.WeGame = "WeGame"
-        self.windows_manage = WindowController()
+
+        # 二值化的阀值
+        self.threshold_value = 136  # 阈值
+        self.max_value = 255  # 设置的最大值
+
     def openDNF(self):
-
-        pyautogui.moveTo(100, 200)
-
-        self.WeGame_id = self.windows_manage.locate_window(self.WeGame)
-        print("self.WeGame_id ",self.WeGame_id )
-
-
-        grid = self.windows_manage.get_window_geometry(self.WeGame_id)
-        print("grid ", grid)
-        x = grid["x_offset"] + 100
-        y = grid["y_offset"] + 200
-        print("x ", x," y ", y)
-        # 鼠标移动到指定位置
-
-        pyautogui.moveTo(x, y)
-        self.windows_manage.focus_window(self.WeGame_id)
-        pyautogui.click()
-
+        print("")
     def start(self):
         if not self.running:
             self.running = True
             # 创建并启动处理while循环的线程
             thread = threading.Thread(target=self.DNF_loop)
             thread.start()
-
+    # DNF_loop
     def stop(self):
         print("stop DNF 循环")
         self.running = False
 
-
     def DNF_loop(self):
         print(" DNF 开始 工作")
-        x,y = 0,0
+        grid = self.获取窗口信息(1)
+        王之摇篮通关提示区 = self.DNF_btn["关卡"]["毁坏的寂静城"]["王之摇篮"]["通关提示区"]
+        print("grid", grid, "通关提示区", 王之摇篮通关提示区)
+        通关提示区 = [1,1,grid["width"],grid["height"]]
+        # 通关提示区[0] = 王之摇篮通关提示区[0] + grid["x_offset"]
+        # 通关提示区[1] = 王之摇篮通关提示区[1] + grid["y_offset"]
+        # 通关提示区[2] = 王之摇篮通关提示区[2] - 王之摇篮通关提示区[0]
+        # 通关提示区[3] = 王之摇篮通关提示区[3] - 王之摇篮通关提示区[1]
+        print(" 通关提示区 : ", 通关提示区)
+        path = "data/quanKin"
+        index = 1000
         while self.running:
-            # 这里是您的while循环处理逻辑
-            # print("Processing...")
-            # time.sleep(0.2)
-            #
-            # # 当前鼠标位置
-            # current_x, current_y = pyautogui.position()
-            # if x != current_x or y!= current_y:
-            #     print("moved X : " , x - current_x," Y:",y - current_y, )
-            #     czx = x - current_x
-            #     czy = y - current_y
-            #     x = current_x
-            #     y = current_y
-            #     print("当前位置 x : {:<4d} y: {:<4d} 移动 : {:<4d} y: {:<4d}".format(x, y, czx, czy))
 
-            y1 = 366
-            x1 = 1461
-            width = 1523 - x1
-            height = 485 - y1
-            # 创建一个屏幕捕获器对象
-            with mss.mss() as sct:
-                # 设置需要捕获的区域（左上角坐标为(x1, y1)，宽度为width，高度为height）
-                monitor = {"top": y1, "left": x1, "width": width, "height": height}
+            gray_image = self.截屏("区域", 范围=通关提示区, 灰度=False)
+            filepath = path + "/" + str(index) + ".png"
+            index += 1
+            cv2.imwrite(filepath, gray_image)  # 保存
 
-                # 捕获屏幕特定位置
-                screenshot = sct.grab(monitor)
+            _, binary_image = cv2.threshold(gray_image, self.threshold_value, self.max_value, cv2.THRESH_BINARY)
 
-                # 将PIL图像转换为NumPy数组
-                image = np.array(screenshot)
-
-                # 将图像转换为灰度图像
-                gray_image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
-
-                # 显示截图
-                cv2.imshow('Continuous Screenshot', gray_image)
-
-                # 按下 'q' 键退出循环
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    break
+            # 显示截图
+            cv2.imshow('Continuous Screenshot', binary_image)
+            cv2.moveWindow('Continuous Screenshot', 2046, 24)
+            # 按下 'q' 键退出循环
+            if cv2.waitKey(300) & 0xFF == ord('q'):
+                break
         # 关闭窗口和摄像头
         cv2.destroyAllWindows()
-        screencap.release()
+        # screencap.release()
 
     def udp_loop(self):
         # 创建UDP socket
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         server_address = ('0.0.0.0', 8848)
         sock.bind(server_address)
-
-        folder_path = str(random.randint(10, 100))
-        folder_path = "data/" + folder_path
-        # 使用os.makedirs()创建文件夹（若路径不存在）
-        os.makedirs(folder_path, exist_ok=True)
-        mdd = 1
 
         while True:
             data, address = sock.recvfrom(1024)
@@ -127,28 +87,27 @@ class DNFmanage():
                 self.stop()
                 break
             elif zl == "4":  # 退出整个程序
-                # print("121")
-                folderd = folder_path + "/" + str(mdd) + ".png"
-                mdd += 1
-                y1 = 366
-                x1 = 1461
-                width = 1523 - x1
-                height = 485 - y1
-                # 创建一个屏幕捕获器对象
-                with mss.mss() as sct:
-                    # 设置需要捕获的区域（左上角坐标为(x1, y1)，宽度为width，高度为height）
-                    monitor = {"top": y1, "left": x1, "width": width, "height": height}
+                self.threshold_value += 1
+                print("更改阀值 : ", self.threshold_value)
+            elif zl == "5":  # 退出整个程序
+                self.threshold_value -= 1
+                print("更改阀值 : ", self.threshold_value)
 
-                    # 捕获屏幕特定位置
-                    screenshot = sct.grab(monitor)
+            elif zl == "6":  # 退出整个程序
+                self.打开角色(4)
 
-                    # 将PIL图像转换为NumPy数组
-                    image = np.array(screenshot)
+            elif zl == "7":  # 游戏结束，退出整个程序
+                current_x, current_y = pyautogui.position()
+                print("当前鼠标位置 : ",current_x, current_y)
+            elif zl == "8":  # 游戏结束，退出整个程序
+                self.激活句柄窗口(self.DNF_id)
+            elif zl == "9":  # 游戏结束，退出整个程序
+                self.threshold_value += 1
+                print("更改阀值 : ", self.threshold_value)
 
-                    # 将图像转换为灰度图像
-                    gray_image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
-                    cv2.imwrite(folderd, gray_image)
-                # 在这里处理灰度图像
+            elif zl == "10":  # 游戏结束，退出整个程序
+                self.threshold_value += 1
+                print("更改阀值 : ", self.threshold_value)
 
 
 # # 创建MyClass实例
@@ -169,4 +128,4 @@ if __name__ == '__main__':
     # DNF.openDNF()
     DNF.udp_loop()
 
-
+    # DNF.鼠标移动到指定位置(100,200)
