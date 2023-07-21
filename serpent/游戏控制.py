@@ -32,7 +32,7 @@ def UDP():
         if zl == "10":
             break
         elif zl == "1": # 测试函数
-            subprocess.call(shlex.split(f"python Serpent.py test Serpent{game_name}GamePlugin"))
+            subprocess.call(shlex.split(f"python Serpent.py  launch  {game_name}"))
         elif zl == "2": # 从游戏中捕捉帧
             subprocess.call(shlex.split(f"python Serpent.py capture frame {game_name} 1"))
         elif zl == "3":

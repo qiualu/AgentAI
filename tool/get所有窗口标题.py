@@ -12,7 +12,7 @@ EnumWindows(foo, 0)
 lt = [t for t in titles if t]
 lt.sort()
 for t in lt:
-    print(t)
+    print("窗口标题: ",t)
     if t == "Fatal Error":
         print("--------------------------------------------------")
 
