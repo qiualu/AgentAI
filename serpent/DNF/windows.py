@@ -5,7 +5,7 @@
 import cv2
 from PIL import ImageGrab
 import numpy as np
-import mss
+import mss,math
 
 import time, win32con,win32gui,pyautogui
 import ctypes
@@ -14,6 +14,24 @@ from serpent.window_controller import WindowController # 窗口句柄管理
 from win32gui import *
 import subprocess,random,socket
 import json
+
+
+
+key_mapping = {
+    "up": 0xDA,
+    "down": 0xD9,
+    "left": 0xD8,
+    "right": 0xD7,
+    "ctrl": 0x80,
+    "shift": 0x81,
+    "alt": 0x82,
+    "tab": 0xB3,
+    "backspace": 0xB2,
+    "enter": 0xB0,
+    "esc": 0xB1,
+    "space": 32
+}
+
 
 class windows():
 
@@ -48,10 +66,17 @@ class windows():
         self.DNF角色 = [[369,288],[582,271],[804,280],[1006,285],[1227,303],[187,654],[395,640],[579,641],[789,643],[1009,653],[1223,657],[1443,666]]
 
         # 读取 JSON 文件
-        with open('配置文件.json', 'r', encoding="utf-8") as file:
+        with open('data/配置文件.json', 'r', encoding="utf-8") as file:
             json_data = file.read()
         # 将 JSON 数据解析为字典
         self.DNF_btn = json.loads(json_data) # 地下城信息
+
+        self.跑图按键 = None
+        self.跑图停止 = True
+
+        self.key记录 = {}
+
+        self.通关情况 = [0] * self.DNF_btn["关卡"]["毁坏的寂静城"]["王之摇篮"]["关卡数量"]
 
 
     def send_udp_data(self,data):
@@ -95,6 +120,24 @@ class windows():
                 # cv2.imwrite(path, image) # 保存
                 return image
 
+    def 像素差异度(self,c1, c2):
+        if len(c1) == 3:
+            b1, g1, r1 = c1
+        else:
+            b1, g1, r1, a = c1
+        if len(c2) == 3:
+            b2, g2, r2 = c2
+        else:
+            b2, g2, r2, a = c2
+
+
+        # print(r1,g1,b1,r2,g2,b2)
+        diff_r = r1 - r2
+        diff_g = g1 - g2
+        diff_b = b1 - b2
+        distance = math.sqrt(diff_r ** 2 + diff_g ** 2 + diff_b ** 2)
+        similarity = 1 - (distance / math.sqrt(255 ** 2 + 255 ** 2 + 255 ** 2))
+        return similarity
 
     def 激活标题窗口(self,window_title):
         hwnd = win32gui.FindWindow(None, window_title)
@@ -166,6 +209,44 @@ class windows():
                 break
 
 
+    def 初始化跑图按键(self,filepath ='data/通关按键/王之摇篮.json'): # self.跑图按键控制台
+        # 读取 JSON 文件
+        with open(filepath, 'r', encoding="utf-8") as file:
+            json_data = file.read()
+        # 将 JSON 数据解析为字典
+        self.跑图按键 = json.loads(json_data)  # 地下城信息
+
+
+
+    def 跑图(self,index,p = True):
+        if not self.跑图按键:
+            self.初始化跑图按键()
+        self.跑图停止 = False
+        keylist = self.跑图按键[str(index)]
+        for key in keylist:
+            new_key_1 = int(key[1]) ^ 1
+            keyname = key[0]
+
+            if len(keyname) == 1:
+                ds = ord(keyname)
+            elif keyname in key_mapping:
+                ds = key_mapping[keyname]
+            else:
+                continue
+
+            if self.跑图停止:
+                break
+
+            data = f"key,{new_key_1},{ds},0\n"
+            self.send_udp_data(data)
+            if p:
+                print("按键 : ", data.replace("\n", ""), key)
+            time.sleep(key[2])
+
+        data = f"key,4,0,0\n" # 释放所有按键
+        self.send_udp_data(data)
+        print("跑图 按键 完成")
+        self.跑图停止 = True
 
     # 在 WeGame 中启动 DNF 点击过程
     def 点击游戏管理器(self,xy):
@@ -185,6 +266,8 @@ class windows():
         # print(grid, x,y)
         data = f"mouse,5,0,0,\n"  # 根据需求组装数据
         self.send_udp_data(data)
+
+
 
     def 启动DNF(self):
         self.点击游戏管理器(self.WeGame_btn["主页"])

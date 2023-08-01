@@ -1,0 +1,105 @@
+
+detect（检测） 进入虚拟环境，输入以下指令
+python detect.py --weights weights/yolov7.pt --source inference/images
+
+
+
+训练
+
+数据准备
+bash scripts/get_coco.sh
+下载 MS COCO 数据集图像（训练、验证、测试）和标签。如果您之前使用过不同版本的YOLO，我们强烈建议您删除train2017.cache文件val2017.cache并重新下载标签
+
+
+
+单GPU训练
+
+# train p5 models
+python train.py --workers 8 --device 0 --batch-size 32 --data data/coco.yaml --img 640 640 --cfg cfg/training/yolov7.yaml --weights '' --name yolov7 --hyp data/hyp.scratch.p5.yaml
+
+# train p6 models
+python train_aux.py --workers 8 --device 0 --batch-size 16 --data data/coco.yaml --img 1280 1280 --cfg cfg/training/yolov7-w6.yaml --weights '' --name yolov7-w6 --hyp data/hyp.scratch.p6.yaml
+
+多GPU训练
+
+# train p5 models
+python -m torch.distributed.launch --nproc_per_node 4 --master_port 9527 train.py --workers 8 --device 0,1,2,3 --sync-bn --batch-size 128 --data data/coco.yaml --img 640 640 --cfg cfg/training/yolov7.yaml --weights '' --name yolov7 --hyp data/hyp.scratch.p5.yaml
+
+# train p6 models
+python -m torch.distributed.launch --nproc_per_node 8 --master_port 9527 train_aux.py --workers 8 --device 0,1,2,3,4,5,6,7 --sync-bn --batch-size 128 --data data/coco.yaml --img 1280 1280 --cfg cfg/training/yolov7-w6.yaml --weights '' --name yolov7-w6 --hyp data/hyp.scratch.p6.yaml
+
+
+
+
+单GPU训练 下面是yolov7 的官方写的教程
+# train p5 models
+python train.py --workers 8 --device 0 --batch-size 32 --data data/coco.yaml --img 640 640 --cfg cfg/training/yolov7.yaml --weights '' --name yolov7 --hyp data/hyp.scratch.p5.yaml
+
+# train p6 models
+python train_aux.py --workers 8 --device 0 --batch-size 16 --data data/coco.yaml --img 1280 1280 --cfg cfg/training/yolov7-w6.yaml --weights '' --name yolov7-w6 --hyp data/hyp.scratch.p6.yaml
+-------------
+我已经准备好了数据集
+
+当前cmd
+(AgentAI) PS E:\Projece\python\AgentAI\yolov7>
+
+文件列表
+
+E:\Projece\python\AgentAI\yolov7\dataimg\dnfdata\train\images
+E:\Projece\python\AgentAI\yolov7\dataimg\dnfdata\train\labels
+E:\Projece\python\AgentAI\yolov7\dataimg\dnfdata\valid\images
+E:\Projece\python\AgentAI\yolov7\dataimg\dnfdata\valid\labels
+
+E:\Projece\python\AgentAI\yolov7\train.py
+
+我想把生成的模型名字命名为 yolo-dnf
+
+帮我修改那个命令行,然后我运行训练这个数据
+我的yaml文件如下:
+E:\Projece\python\AgentAI\yolov7\dataimg\dnfdata.yaml
+
+数据图片大小
+    "imageHeight": 900,
+    "imageWidth": 1600
+
+python train.py --workers 8 --device 0 --batch-size 32 --data dataimg/dnfdata.yaml --img 640 640 --cfg cfg/training/yolov7.yaml --weights '' --name yolo-dnf --hyp data/hyp.scratch.p5.yaml
+python train.py --workers 8 --device 0 --batch-size 32 --data dataimg/dnfdata.yaml --img 900 1600 --cfg cfg/training/yolov7.yaml --weights '' --name weights/yolo-dnf --hyp data/hyp.scratch.p5.yaml
+
+python train.py --workers 8 --device 0 --batch-size 32 --data dataimg/dnfdata.yaml --img 900 1600 --cfg cfg/training/yolov7.yaml --weights yolov7.pt --name weights/yolo-dnf --hyp data/hyp.scratch.p5.yaml
+
+python train.py --workers 0 --batch-size 4 --epochs 100 --nosave --data data/DataDNF.yaml --img 640 640 --cfg cfg/training/yolov7_DataDNF.yaml --weights weights/yolv7.pt
+
+
+我想把模型保存在这里是不是这样写
+E:\Projece\python\AgentAI\yolov7\weights
+
+weights
+
+
+
+# drop 落物 door 通关门  foe 怪 role 角色
+# names: [ '掉落物', '通关门', '怪', '角色']
+
+a6e7e9dd65e88f4940197176099c044fead8a342
+
+
+
+python train.py --weights weights/yolov7_training.pt --cfg ./cfg/training/yolov7_DataDNF.yaml --data  data/DataDNF.yaml  --device 0 --batch-size 2 --epoch 300
+
+
+mask/test/images
+
+
+
+# 成功训练
+python train.py --data mask/data.yaml --cfg cfg/training/yolov7_mask.yaml --weights weights/yolov7_training.pt --name yolov7 --hyp data/hyp.scratch.p5.yaml --device cpu
+
+python detect.py --weights weights/dnf/last.pt --source mask/test/images
+
+
+
+
+
+
+
+

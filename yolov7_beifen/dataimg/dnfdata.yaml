@@ -1,0 +1,9 @@
+
+nc: 4
+train: E:/Projece/python/AgentAI/yolov7/dataimg/dnfdata/train/images
+val: E:/Projece/python/AgentAI/yolov7/dataimg/dnfdata/valid/labels
+
+names: [ 'drop', 'door', 'foe', 'role']
+
+
+

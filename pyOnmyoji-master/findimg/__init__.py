@@ -1,0 +1,1 @@
+from findimg.core import *

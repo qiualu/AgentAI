@@ -12,23 +12,46 @@ import json,cv2
 
 from serpent.DNF.windows import windows
 
-game = windows()
+# game = windows()
+#
+# game.跑图(1)
 
-g = game.获取窗口信息(1)
-print(g)
-path = "data/50"
-index = 1000
-通关提示区 = game.DNF_btn["关卡"]["毁坏的寂静城"]["王之摇篮"]["通关提示区"]
-通关提示区[2] = 通关提示区[2] - 通关提示区[0]
-通关提示区[3] = 通关提示区[3] - 通关提示区[1]
-gray_image = game.截屏("区域",范围 = 通关提示区,灰度=False)
-filepath = path + "/" + str(index) + ".png"
-index += 1
-cv2.imwrite(filepath, gray_image)  # 保存
-print("filepath",filepath)
 
-cv2.imshow('Continuous Screenshot', gray_image)
-cv2.moveWindow('Continuous Screenshot', 2046, 24)
-cv2.waitKey(3000)
-# 关闭窗口和摄像头
-cv2.destroyAllWindows()
+
+
+import paho.mqtt.client as mqtt
+
+# 连接成功回调函数
+def on_connect(client, userdata, flags, rc):
+    print("Connected with result code " + str(rc))
+    client.subscribe("udpmanage")
+
+# 消息接收回调函数
+def on_message(client, userdata, msg):
+    print(msg.topic + " " + str(msg.payload))
+
+# 创建客户端实例
+client = mqtt.Client()
+
+# 设置连接成功和消息接收的回调函数
+client.on_connect = on_connect
+client.on_message = on_message
+print("start coo ")
+# 连接到 MQTT 代理
+client.connect("ws://175.178.159.67", 8083, 60)
+print("start 123")
+# 循环处理网络流量
+client.loop_forever()
+
+
+
+
+
+
+
+
+
+
+
+
+
