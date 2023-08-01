@@ -14,7 +14,7 @@ __pycache__/
 # plugins/
 github/
 data/
-yolov7/
+#yolov7/
 tools
 
 *.egg-info

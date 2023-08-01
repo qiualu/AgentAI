@@ -1,0 +1,6 @@
+train: mask/train/images
+val: mask/valid/images
+
+nc: 4
+# names: ['mask', 'no-mask']
+names: ['drop', 'door', 'foe', 'role']
