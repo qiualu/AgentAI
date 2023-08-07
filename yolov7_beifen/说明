@@ -102,4 +102,3 @@ python detect.py --weights weights/dnf/last.pt --source mask/test/images
 
 
 
-
